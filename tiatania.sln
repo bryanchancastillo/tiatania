@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tiatania.API", "tiatania.API\tiatania.API.csproj", "{87CAFFE9-B464-42A5-9DCB-C629AF5CBE45}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "tiatania.CLIENT", "tiatania.CLIENT\tiatania.CLIENT.esproj", "{E7E90C87-71D7-4B64-B04E-50E337A86DD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tiatania.DAL", "tiatania.DAL\tiatania.DAL.csproj", "{9C8704B8-87AC-4D64-BCD4-333AC70D5706}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87CAFFE9-B464-42A5-9DCB-C629AF5CBE45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87CAFFE9-B464-42A5-9DCB-C629AF5CBE45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87CAFFE9-B464-42A5-9DCB-C629AF5CBE45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87CAFFE9-B464-42A5-9DCB-C629AF5CBE45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7E90C87-71D7-4B64-B04E-50E337A86DD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7E90C87-71D7-4B64-B04E-50E337A86DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7E90C87-71D7-4B64-B04E-50E337A86DD5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E7E90C87-71D7-4B64-B04E-50E337A86DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7E90C87-71D7-4B64-B04E-50E337A86DD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7E90C87-71D7-4B64-B04E-50E337A86DD5}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{9C8704B8-87AC-4D64-BCD4-333AC70D5706}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C8704B8-87AC-4D64-BCD4-333AC70D5706}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C8704B8-87AC-4D64-BCD4-333AC70D5706}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C8704B8-87AC-4D64-BCD4-333AC70D5706}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61A2A553-26BB-45D3-ABEA-2AF49431DDBE}
+	EndGlobalSection
+EndGlobal
