@@ -1,6 +1,11 @@
 @tiatania.API_HostAddress = http://localhost:5246
 
-GET {{tiatania.API_HostAddress}}/weatherforecast/
+GET {{tiatania.API_HostAddress}}/API/Weatherforecasts/
+Accept: application/json
+
+###
+
+GET {{tiatania.API_HostAddress}}/API/Menus/
 Accept: application/json
 
 ###
