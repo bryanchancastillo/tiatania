@@ -1,0 +1,24 @@
+﻿
+// Animation
+
+@keyframes rainbowText {
+
+    0% {
+        color: $white;
+    }
+
+    50% {
+        color: $pink;
+    }
+
+    100% {
+        color: #FFB6C1;
+    }
+}
+
+.tiatanialogo {
+    font-family: $freeHand;
+    font-weight: bold;
+    animation: rainbowText 4s linear infinite; // 4s para que complete un ciclo en 4 segundos
+    margin-bottom: 1rem;
+}
