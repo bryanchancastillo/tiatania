@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using tiatania.dal.Models;
+using tiatania.DAL.Models;
 
 namespace tiatania.DAL;
 
