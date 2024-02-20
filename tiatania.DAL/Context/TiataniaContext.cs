@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using tiatania.DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Data;
 
 namespace tiatania.DAL;
 
-public partial class TiataniaContext : DbContext
+public partial class TiataniaContext : IdentityDbContext<IdentityUser>
 {
     public TiataniaContext(DbContextOptions<TiataniaContext> options)
         : base(options)
@@ -18,6 +21,10 @@ public partial class TiataniaContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        base.OnModelCreating(modelBuilder);
+
+
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
@@ -76,8 +83,8 @@ public partial class TiataniaContext : DbContext
                 .HasColumnName("updated_on");
         });
 
-        OnModelCreatingPartial(modelBuilder);
+        // OnModelCreatingPartial(modelBuilder);
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+   // partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

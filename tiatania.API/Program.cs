@@ -1,14 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using tiatania.DAL;
-
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
+// Add services to the container.
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 //Get connection string from configuration
@@ -16,6 +18,10 @@ builder.Configuration.AddJsonFile("connectionString.json", optional: true);
 
 builder.Services.AddDbContext<TiataniaContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("TiataniaDatabase"), ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("TiataniaDatabase"))));
 
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TiataniaContext>();
+
+// Razor
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -31,10 +37,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
+
+app.MapRazorPages();
 
 app.Run();
