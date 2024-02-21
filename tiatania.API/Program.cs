@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using tiatania.DAL;
 using Microsoft.AspNetCore.Identity;
+using tiatania.DAL.Models;
+using Newtonsoft.Json;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +21,10 @@ builder.Configuration.AddJsonFile("connectionString.json", optional: true);
 
 builder.Services.AddDbContext<TiataniaContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("TiataniaDatabase"), ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("TiataniaDatabase"))));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TiataniaContext>();
+//Identity
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<Role>()
+    .AddEntityFrameworkStores<TiataniaContext>();
 
 // Razor
 builder.Services.AddRazorPages();
