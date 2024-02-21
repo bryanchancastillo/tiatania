@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace tiatania.dal.Models;
+namespace tiatania.DAL.Models;
 
 public partial class ReferenceMenuType
 {

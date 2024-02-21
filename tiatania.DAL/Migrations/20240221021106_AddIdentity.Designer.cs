@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using tiatania.DAL;
 
@@ -10,9 +11,11 @@ using tiatania.DAL;
 namespace tiatania.DAL.Migrations
 {
     [DbContext(typeof(TiataniaContext))]
-    partial class TiataniaContextModelSnapshot : ModelSnapshot
+    [Migration("20240221021106_AddIdentity")]
+    partial class AddIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
