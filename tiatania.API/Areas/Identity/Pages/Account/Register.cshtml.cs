@@ -125,6 +125,24 @@ namespace tiatania.API.Areas.Identity.Pages.Account
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+                    user.CreatedBy = user.Id;
+                    user.UpdatedBy = user.Id;   
+
+                    var userRole = new UserRole
+                    {
+                        UserId = user.Id,
+                        RoleId = 1,
+                        Active = true,
+                        CreatedBy = user.Id,
+                        CreatedOn = DateTime.UtcNow,
+                        UpdatedBy = user.Id,
+                        UpdatedOn = DateTime.UtcNow
+                    };
+
+                    user.Roles.Add(userRole);
+                    await _userManager.UpdateAsync(user);
+
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
@@ -163,8 +181,8 @@ namespace tiatania.API.Areas.Identity.Pages.Account
             }
             catch
             {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
+                throw new InvalidOperationException($"Can't create an instance of '{nameof(User)}'. " +
+                    $"Ensure that '{nameof(User)}' is not an abstract class and has a parameterless constructor, or alternatively " +
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }

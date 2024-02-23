@@ -63,7 +63,8 @@ public partial class TiataniaContext : IdentityDbContext<User, Role, int, UserCl
         modelBuilder.Entity<RoleClaim>().ToTable("security_role_claim");
         modelBuilder.Entity<UserToken>().ToTable("security_user_token");
 
-        modelBuilder.Entity<Role>().HasData(new Role() { Id = 1, Name = "System Admin", NormalizedName = "SYSTEM ADMIN" });
+        modelBuilder.Entity<Role>().HasData(new Role() { Id = 1, Name = "System User", NormalizedName = "SYSTEM USER" });
+        modelBuilder.Entity<Role>().HasData(new Role() { Id = 2, Name = "System Admin", NormalizedName = "SYSTEM ADMIN" });
 
         modelBuilder.Entity<Menu>(entity =>
         {

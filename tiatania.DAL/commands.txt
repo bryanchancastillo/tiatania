@@ -1,5 +1,5 @@
 dotnet ef dbcontext scaffold "Server=localhost;User=root;Password=***;Database=tiatania" Pomelo.EntityFrameworkCore.MySql -o Models --context-dir Context -c TiataniaContext --context-namespace tiatania.DAL -f --no-onconfiguring
 
-dotnet ef migrations add FirstIdentity --startup-project ../tiatania.API
+dotnet ef migrations add AddRoles --startup-project ../tiatania.API
 
 dotnet ef database update --startup-project ../tiatania.API
