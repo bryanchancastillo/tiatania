@@ -54,6 +54,10 @@ export default defineConfig({
             '^/Identity': {
                 target: 'https://localhost:7042/',
                 secure: false
+            },
+             '^/content': {
+                target: 'https://localhost:7042/',
+                secure: false
             }
         },
         port: 5173,
