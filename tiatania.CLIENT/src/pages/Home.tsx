@@ -1,9 +1,11 @@
 import Footer from "../components/Footer";
-
+import Navbar from "../components/Navbar";
 function Home() {
 
     return (
         <>
+            <Navbar />
+
             <header className="bg-cover" style={{ backgroundImage: "url(assets/img/1.jpg)" }}>
                 <div className="d-flex flex-column min-vh-100 bg-black-50 pt-10 pt-md-8 pb-7 pb-md-0">
                     <div className="container my-auto">
@@ -53,7 +55,7 @@ function Home() {
                 </div>
             </header>
 
-            
+            <Footer />
         </>
   );
 }
