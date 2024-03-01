@@ -3,7 +3,7 @@ import { HeaderProps } from '../interfaces/HeaderProps';
 function Header(props: HeaderProps) {
     
   return (
-      <header className="bg-cover" style={{ backgroundImage: 'url(assets/img/menu.jpg' }}>
+      <header className="bg-cover" style={{ backgroundImage: 'url(assets/img/header.jpg' }}>
           <div className="pt-10 pb-8 pt-md-15 pb-md-13 bg-black-50">
               <div className="container">
                   <div className="row justify-content-center">

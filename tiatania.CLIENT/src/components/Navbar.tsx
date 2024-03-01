@@ -11,34 +11,6 @@ function Navbar() {
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
     const location = useLocation();
-  
-    function makeNavbarDark() {
-        if (navbar.current != null) {
-            navbar.current.classList.remove('navbar-light');
-            navbar.current.classList.add('navbar-dark');
-            setIsLight(false);
-        }
-    }
-
-    function makeNavbarLight() {
-        if (navbar.current != null) {
-            navbar.current.classList.remove('navbar-dark');
-            navbar.current.classList.add('navbar-light');
-            setIsLight(true);
-        }
-    }
-
-    function toggleNavbar() {
-        const scrollTop: number = window.pageYOffset;
-        
-        if (scrollTop && !isLight) {
-            makeNavbarLight();
-        }
-
-        if (!scrollTop && !isCollapsed) {
-            makeNavbarDark();
-        }
-    }
 
     useEffect(() => {
         const windowEvents: string[] = ['load', 'scroll'];
@@ -80,16 +52,10 @@ function Navbar() {
         <nav className="navbar navbar-dark navbar-expand-lg navbar-togglable fixed-top" ref={navbar}>
             <div className="container">
                 <a className="navbar-brand d-lg-none" href="/">Tia Tania</a>
-
-                {/*<!-- Navbar toggler -->*/}
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" ref={navbarToggler}  >
                     <i className="bi bi-list" style={{ fontSize: "1.7rem" }}></i>
                 </button>
-
-                {/*<!-- Navbar collapse -->*/}
                 <div className="collapse navbar-collapse" id="navbarCollapse" ref={navbarCollapse}  >
-
-                    {/*<!-- Navbar nav -->*/}
                     <ul className="navbar-nav">
                         <li className="nav-item">
                             <a className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} href="/about">Sobre nosotros</a>
@@ -98,13 +64,9 @@ function Navbar() {
                             <a className={`nav-link ${location.pathname === '/menu' ? 'active' : ''}`} href="/menu">Menu</a>
                         </li>
                     </ul>
-
-                    {/*<!-- Navbar brand -->*/}
                     <a className="navbar-brand d-none d-lg-flex mx-lg-auto" href="/">
                         Tia Tania
                     </a>
-
-                    {/*<!-- Navbar nav -->*/}
                     <ul className="navbar-nav">
                         <li className="nav-item">
                             <a className={`nav-link ${location.pathname === '/gallery' ? 'active' : ''}`} href="/gallery">Galeria</a>
@@ -117,6 +79,34 @@ function Navbar() {
             </div>
         </nav>
     );
+
+    function makeNavbarDark() {
+        if (navbar.current != null) {
+            navbar.current.classList.remove('navbar-light');
+            navbar.current.classList.add('navbar-dark');
+            setIsLight(false);
+        }
+    }
+
+    function makeNavbarLight() {
+        if (navbar.current != null) {
+            navbar.current.classList.remove('navbar-dark');
+            navbar.current.classList.add('navbar-light');
+            setIsLight(true);
+        }
+    }
+
+    function toggleNavbar() {
+        const scrollTop: number = window.pageYOffset;
+        
+        if (scrollTop && !isLight) {
+            makeNavbarLight();
+        }
+
+        if (!scrollTop && !isCollapsed) {
+            makeNavbarDark();
+        }
+    }
 }
 
 export default Navbar;
