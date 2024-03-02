@@ -1,5 +1,6 @@
 import Home from "./pages/Home";
 import PageNotFound from "./pages/PageNotFound";
+import Prices from "./pages/Prices";
 
 const AppRoutes = [
     {
@@ -9,6 +10,10 @@ const AppRoutes = [
     {
         path: '*',
         element: <PageNotFound />
+    },
+    {
+        path: 'prices',
+        element: <Prices />
     },
 ];
 
