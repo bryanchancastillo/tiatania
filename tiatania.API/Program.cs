@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using tiatania.DAL.Models;
 using Newtonsoft.Json;
 using System.Net;
+using tiatania.API.Services.Interfaces;
+using tiatania.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,9 @@ builder.Services.AddDbContext<TiataniaContext>(options => options.UseMySql(build
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<Role>()
     .AddEntityFrameworkStores<TiataniaContext>();
+
+// AppSession
+builder.Services.AddTransient<IAppSession, AppSession>();
 
 // Razor
 builder.Services.AddRazorPages();
