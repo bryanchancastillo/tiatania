@@ -63,8 +63,8 @@ public partial class TiataniaContext : IdentityDbContext<User, Role, int, UserCl
         modelBuilder.Entity<RoleClaim>().ToTable("security_role_claim");
         modelBuilder.Entity<UserToken>().ToTable("security_user_token");
 
-        modelBuilder.Entity<Role>().HasData(new Role() { Id = 1, Name = "System User", NormalizedName = "SYSTEM USER" });
-        modelBuilder.Entity<Role>().HasData(new Role() { Id = 2, Name = "System Admin", NormalizedName = "SYSTEM ADMIN" });
+        modelBuilder.Entity<Role>().HasData(new Role() { Id = 1, Name = "User", NormalizedName = "USER" });
+        modelBuilder.Entity<Role>().HasData(new Role() { Id = 2, Name = "Admin", NormalizedName = "ADMIN" });
 
         modelBuilder.Entity<Menu>(entity =>
         {
@@ -119,6 +119,14 @@ public partial class TiataniaContext : IdentityDbContext<User, Role, int, UserCl
                 .HasColumnType("timestamp")
                 .HasColumnName("updated_on");
         });
+
+        modelBuilder.Entity<ReferenceMenuType>().HasData(new ReferenceMenuType() { MenuTypeId = 1, Code = "Cervezas", Active = true, CreatedOn = DateTime.Now, UpdatedOn = DateTime.Now, CreatedBy = 1, UpdatedBy = 1 });
+        modelBuilder.Entity<ReferenceMenuType>().HasData(new ReferenceMenuType() { MenuTypeId = 2, Code = "Licores", Active = true, CreatedOn = DateTime.Now, UpdatedOn = DateTime.Now, CreatedBy = 1, UpdatedBy = 1 });
+        modelBuilder.Entity<ReferenceMenuType>().HasData(new ReferenceMenuType() { MenuTypeId = 3, Code = "Vinos", Active = true, CreatedOn = DateTime.Now, UpdatedOn = DateTime.Now, CreatedBy = 1, UpdatedBy = 1 });
+        modelBuilder.Entity<ReferenceMenuType>().HasData(new ReferenceMenuType() { MenuTypeId = 4, Code = "Bebidas", Active = true, CreatedOn = DateTime.Now, UpdatedOn = DateTime.Now, CreatedBy = 1, UpdatedBy = 1 });
+        modelBuilder.Entity<ReferenceMenuType>().HasData(new ReferenceMenuType() { MenuTypeId = 5, Code = "Cigarrilos", Active = true, CreatedOn = DateTime.Now, UpdatedOn = DateTime.Now, CreatedBy = 1, UpdatedBy = 1 });
+        modelBuilder.Entity<ReferenceMenuType>().HasData(new ReferenceMenuType() { MenuTypeId = 6, Code = "Snacks", Active = true, CreatedOn = DateTime.Now, UpdatedOn = DateTime.Now, CreatedBy = 1, UpdatedBy = 1 });
+        modelBuilder.Entity<ReferenceMenuType>().HasData(new ReferenceMenuType() { MenuTypeId = 7, Code = "Cuidado Personal", Active = true, CreatedOn = DateTime.Now, UpdatedOn = DateTime.Now, CreatedBy = 1, UpdatedBy = 1 });
 
         // OnModelCreatingPartial(modelBuilder);
     }
