@@ -1,7 +1,12 @@
 import { Routes, Route } from "react-router-dom";
 import AppRoutes from './AppRoutes.jsx'
+import { useContext } from "react";
+import { AuthContext } from "./context/authContext.jsx";
+
 
 function App() {
+
+    //const currentUser = useContext(AuthContext);
     
     return (
         <Routes>
