@@ -55,17 +55,19 @@ public class AuthenticationController : ControllerBase
                 return user;
             }
 
-            // Mapear la información del usuario al objeto User
             user.Id = currentUser.Id;
             user.EmailAddress = currentUser.Email ?? "";
             user.EmailConfirmed = currentUser.EmailConfirmed;
             user.FirstName = currentUser.FirstName ?? "";
             user.LastName = currentUser.LastName ?? "";
 
-            // Obtener los nombres de los roles del usuario
-            var roles = await _userManager.GetRolesAsync(currentUser);
-            user.RolesName = roles.ToArray();
+            var rolesClaim = HttpContext.User?.FindFirstValue(ClaimTypes.Role);
 
+            if (!string.IsNullOrEmpty(rolesClaim))
+            {
+                var roles = rolesClaim.Split(',');
+                user.RolesName = roles.ToArray();
+            }
 
             return user;
         }
@@ -75,6 +77,21 @@ public class AuthenticationController : ControllerBase
             return user;
         }
 
+    }
+
+    [AllowAnonymous]
+    [HttpGet("InspectClaims")]
+    public IActionResult InspectClaims()
+    {
+        var claims = HttpContext.User?.Claims;
+
+        if (claims != null)
+        {
+            var claimsInfo = claims.Select(claim => new { Type = claim.Type, Value = claim.Value });
+            return new JsonResult(claimsInfo);
+        }
+
+        return new JsonResult(new { Message = "No claims found." });
     }
 
 
