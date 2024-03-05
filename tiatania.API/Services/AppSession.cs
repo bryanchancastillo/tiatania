@@ -20,6 +20,7 @@ public class AppSession : IAppSession
     private readonly TiataniaContext _context;
 
     public int CurrentUserId { get => GetCurrentUserId(); }
+
     public Models.User? CurrentUser { get => GetCurrentUserAsync().Result; }
 
     public AppSession(IHttpContextAccessor httpContextAccessor, TiataniaContext context)
