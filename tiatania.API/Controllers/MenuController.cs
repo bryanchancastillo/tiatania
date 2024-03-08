@@ -5,6 +5,8 @@ using tiatania.API.Models;
 using tiatania.DAL;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using tiatania.API.Services.Interfaces;
+using tiatania.API.Services;
 
 
 namespace tiatania.API.Controllers
@@ -17,10 +19,11 @@ namespace tiatania.API.Controllers
         private readonly TiataniaContext _context;
         private readonly IAppSession _appSession;
 
-        public MenuController(TiataniaContext context, IAppSession _appSession)
+        public MenuController(TiataniaContext context, IAppSession appSession)
         {
             _context = context;
             _appSession = appSession;
+           
         }
 
         [HttpGet]
@@ -71,9 +74,9 @@ namespace tiatania.API.Controllers
             menu.Name = model.Name;
             menu.ImagePath = model.ImagePath;
             menu.Active = true;
-            menu.CreatedBy = 1;
+            menu.CreatedBy = _appSession.CurrentUserId;
             menu.CreatedOn = DateTime.Now;
-            menu.UpdatedBy = 1;
+            menu.UpdatedBy = _appSession.CurrentUserId;
             menu.UpdatedOn = DateTime.UtcNow;
 
             _context.Menus.Add(menu);

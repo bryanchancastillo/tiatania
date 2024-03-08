@@ -72,7 +72,7 @@ function Navbar() {
                             <a className={`nav-link ${location.pathname === '/gallery' ? 'active' : ''}`} href="/gallery">Galeria</a>
                         </li>
                         <li className="nav-item">
-                            <a className={`nav-link ${location.pathname === '/prices' ? 'active' : ''}`} href="/prices">Prices</a>
+                            <a className={`nav-link ${location.pathname === '/prices' ? 'active' : ''}`} href="/prices">Precios</a>
                         </li>
                     </ul>
                 </div>
