@@ -18,11 +18,13 @@ namespace tiatania.API.Controllers
 
         private readonly TiataniaContext _context;
         private readonly IAppSession _appSession;
+        private readonly IConfiguration _configuration;
 
-        public MenuController(TiataniaContext context, IAppSession appSession)
+        public MenuController(TiataniaContext context, IAppSession appSession, IConfiguration configuration)
         {
             _context = context;
             _appSession = appSession;
+            _configuration = configuration;
            
         }
 
@@ -61,8 +63,18 @@ namespace tiatania.API.Controllers
         [HttpPost("Create")]
         public ActionResult Create(Menu model)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var uploadDirectory = _configuration["UploadDirectory"];
 
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
+            var filePath = Path.Combine(uploadDirectory, fileName);
+
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                model.File.CopyTo(stream);
+            }
+
+            model.ImagePath = fileName;
+        
             var menu = _context.Menus.FirstOrDefault(m => m.MenuId == model.MenuId
                 && m.MenuTypeId == model.MenuTypeId && m.Active) ??
                 new DAL.Models.Menu()
@@ -72,6 +84,7 @@ namespace tiatania.API.Controllers
 
             menu.MenuTypeId = model.MenuTypeId;
             menu.Name = model.Name;
+            menu.Price = model.Price;
             menu.ImagePath = model.ImagePath;
             menu.Active = true;
             menu.CreatedBy = _appSession.CurrentUserId;
