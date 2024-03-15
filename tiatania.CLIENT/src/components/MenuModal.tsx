@@ -4,6 +4,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 interface MenuModalProps {
     isOpen: boolean;
     toggle: () => void;
+    addNewItemToMenu: () => void;
 }
 
 interface MenuItem {
@@ -11,13 +12,14 @@ interface MenuItem {
     code: string;
 }
 
-function MenuModal({ isOpen, toggle }: MenuModalProps) {
+function MenuModal({ isOpen, toggle, addNewItemToMenu }: MenuModalProps) {
     const [referenceMenuTypes, setReferenceMenuTypes] = useState<MenuItem[]>([]);
     const [selectedMenuTypeId, setSelectedMenuTypeId] = useState<number | null>(null);
     const [selectedMenuName, setSelectedMenuName] = useState<string | null>(null);
     const [selectedMenuPrice, setSelectedMenuPrice] = useState<number | null>(null);
     const [selectedMenuFile, setSelectedMenuFile] = useState<File | null>(null);
     const [previewImage, setPreviewImage] = useState(null);
+ 
 
     const imageName = selectedMenuFile ? selectedMenuFile.name : null;
 
@@ -95,6 +97,9 @@ function MenuModal({ isOpen, toggle }: MenuModalProps) {
             if (responseResult.modal.menuId > 0) {
                 toggle();
             }
+
+            addNewItemToMenu(responseResult.modal);
+
             
         } catch (error) {
             console.error('Error creating menu item:', error);

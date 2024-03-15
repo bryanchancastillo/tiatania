@@ -34,6 +34,10 @@ function Menu() {
         setMenuModalIsOpen(false);
     }
 
+    function addedNewItemToMenu(newMenuItem: MenuItem) {
+        setMenuItems(prevMenuItems => [...prevMenuItems, newMenuItem]);
+    }
+
     useEffect(() => {
         populateMenuItems();
     }, []);
@@ -120,7 +124,7 @@ function Menu() {
 
             <Footer />
 
-            <MenuModal isOpen={menuModalIsOpen} toggle={closeMenuModal} />
+            <MenuModal isOpen={menuModalIsOpen} toggle={closeMenuModal} addNewItemToMenu={addedNewItemToMenu} />
 
         </>
     );
