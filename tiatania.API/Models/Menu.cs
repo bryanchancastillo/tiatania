@@ -12,12 +12,12 @@ namespace tiatania.API.Models
 
       public int Price { get; set; }
 
-      public string ImagePath { get; set; } = null!;
+      public string? ImagePath { get; set; }
 
+        
+        [FromForm]
 
-      [FromForm]
-      public IFormFile File { get; set; } = null!;
-
+        public IFormFile? File { get; set; }
 
     }
 }
