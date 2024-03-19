@@ -249,22 +249,24 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
                     )}
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" onClick={handleOpenConfirmModal}>
-                        <i className="bi bi-trash3 mx-1"></i>
-                        Eliminar
-                    </Button>
-                    <Button color="primary" onClick={UpdateOrCreateMenuItem}>
-                        Guardar
-                    </Button>
                     <Button color="secondary" onClick={toggle}>
                         Cancelar
+                    </Button>
+                    {selectedMenuItemData && selectedMenuItemData?.menuId > 0 ? (
+                        <Button color="danger" onClick={handleOpenConfirmModal}>
+                        <i className="bi bi-trash3 mx-1"></i>
+                            Eliminar
+                        </Button>) : null
+                    }
+                    <Button color="primary" onClick={UpdateOrCreateMenuItem}>
+                        Guardar
                     </Button>
                 </ModalFooter>
             </Modal>
             {showConfirmModal && createPortal(
                 <ConfirmModal
-                    title="Confirm Recruitment Effort Removal"
-                    message="Are you sure you want to remove this Recruitment Effort?"
+                    title="Confirmacion para borrar esta bebida"
+                    message="Estas seguro de que quieres borrar esta bebida?"
                     onCancel={handleCloseConfirmModal}
                     onConfirm={() => handleDeleteMenuItem(selectedMenuItemData?.menuId)}
                 />,
