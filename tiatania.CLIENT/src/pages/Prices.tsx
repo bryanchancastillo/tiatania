@@ -43,7 +43,7 @@ function Prices() {
                                           <h4 className="my-0 fw-normal text-light">2 Horas</h4>
                                       </div>
                                       <div className="card-body bg-dark">
-                                          <h1 className="card-title pricing-card-title text-light">RD$<span style={h1Style}>630</span></h1>
+                                          <h1 className="card-title pricing-card-title text-light">RD$<span style={h1Style}>680</span></h1>
                                       </div>
                                   </div>
                               </div>
