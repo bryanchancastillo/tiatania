@@ -71,11 +71,6 @@ function Menu() {
         // Optionally, perform any other actions needed after deleting the menu item
     }
 
-
-    function calculateTotalPrice() {
-        return menuItems.reduce((total, item) => total + item.price, 0);
-    }
-
     function toggleDrinkSelection(drink: MenuItem) {
         // Function to toggle the selection of a beer
 
@@ -158,7 +153,6 @@ function Menu() {
         setSelectedDrink([]);
         setDrinkQuantities({});
         setTotalPrice(0);
-
     }
 
     function renderMenuItems(menuTypeId: number) {
@@ -263,9 +257,45 @@ function Menu() {
                                     id="vinosTab"
                                     onClick={() => setActiveTab('vinos')}
                                     role="tab"
-                                    aria-controls="licores"
+                                    aria-controls="vinos"
                                 >
                                     Vinos
+                                </a>
+                                <a
+                                    className={`nav-link ${activeTab === 'bebidas' ? 'active' : ''} mb-3`}
+                                    id="bebidasTab"
+                                    onClick={() => setActiveTab('bebidas')}
+                                    role="tab"
+                                    aria-controls="bebidas"
+                                >
+                                    Bebidas
+                                </a>
+                                <a
+                                    className={`nav-link ${activeTab === 'cigarrillos' ? 'active' : ''} mb-3`}
+                                    id="cigarillosTab"
+                                    onClick={() => setActiveTab('cigarrillos')}
+                                    role="tab"
+                                    aria-controls="cigarrillos"
+                                >
+                                    Cigarrillos
+                                </a>
+                                <a
+                                    className={`nav-link ${activeTab === 'snacks' ? 'active' : ''} mb-3`}
+                                    id="snacksTab"
+                                    onClick={() => setActiveTab('snacks')}
+                                    role="tab"
+                                    aria-controls="snacks"
+                                >
+                                    snacks
+                                </a>
+                                <a
+                                    className={`nav-link ${activeTab === 'bienestar' ? 'active' : ''} mb-3`}
+                                    id="bienestarTab"
+                                    onClick={() => setActiveTab('bienestar')}
+                                    role="tab"
+                                    aria-controls="bienestar"
+                                >
+                                    Cuidado Personal
                                 </a>
                             </div>
                         </div>
@@ -291,11 +321,43 @@ function Menu() {
                                 </div>
                                 <div
                                     className={`tab-pane fade show ${activeTab === 'vinos' ? 'active' : ''}`}
-                                    id="licores"
+                                    id="vinos"
                                     role="tabpanel"
-                                    aria-labelledby="licoresTab"
+                                    aria-labelledby="vinosTab"
                                 >
                                     <div className="row">{renderMenuItems(3)}</div>
+                                </div>
+                                <div
+                                    className={`tab-pane fade show ${activeTab === 'bebidas' ? 'active' : ''}`}
+                                    id="bebidas"
+                                    role="tabpanel"
+                                    aria-labelledby="bebidasTab"
+                                >
+                                    <div className="row">{renderMenuItems(4)}</div>
+                                </div>
+                                <div
+                                    className={`tab-pane fade show ${activeTab === 'cigarrillos' ? 'active' : ''}`}
+                                    id="cigarrillos"
+                                    role="tabpanel"
+                                    aria-labelledby="cigarrillosTab"
+                                >
+                                    <div className="row">{renderMenuItems(5)}</div>
+                                </div>
+                                <div
+                                    className={`tab-pane fade show ${activeTab === 'snacks' ? 'active' : ''}`}
+                                    id="snacks"
+                                    role="tabpanel"
+                                    aria-labelledby="snacksTab"
+                                >
+                                    <div className="row">{renderMenuItems(6)}</div>
+                                </div>
+                                <div
+                                    className={`tab-pane fade show ${activeTab === 'bienestar' ? 'active' : ''}`}
+                                    id="bienestar"
+                                    role="tabpanel"
+                                    aria-labelledby="bienestarTab"
+                                >
+                                    <div className="row">{renderMenuItems(7)}</div>
                                 </div>
                             </div>
                         </div>
