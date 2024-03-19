@@ -6,6 +6,7 @@ import { AuthContext }  from "../context/authContext.jsx";
 import MenuModal from "../components/MenuModal.js";
 const basePath = '../public/assets/img/';
 
+
 interface MenuItem {
     menuId: number;
     menuTypeId: number;
@@ -42,7 +43,7 @@ function Menu() {
         setMenuItems(prevMenuItems => [...prevMenuItems, newMenuItem]);
     }
 
-    function addUpdatedMenuItem(addedUpdatedMenuItem) {
+    function addedUpdatedMenuItem(addedUpdatedMenuItem) {
 
         // Find the index of the updated menu item in the menuItems array
         const itemIndex = menuItems.findIndex(item => item.menuId === addedUpdatedMenuItem.menuId);
@@ -61,6 +62,15 @@ function Menu() {
 
         // Optionally, perform any other actions needed after updating the menu items
     }
+
+    function addedDeletedMenuItem(menuIdToDelete) {
+        // Filter out the menu item with the specified menuIdToDelete
+        const updatedMenuItems = menuItems.filter(item => item.menuId !== menuIdToDelete);
+        setMenuItems(updatedMenuItems); // Update the state with the filtered menu items
+
+        // Optionally, perform any other actions needed after deleting the menu item
+    }
+
 
     function calculateTotalPrice() {
         return menuItems.reduce((total, item) => total + item.price, 0);
@@ -183,9 +193,12 @@ function Menu() {
                                             <i
                                                 className="bi bi-x-circle-fill text-danger"
                                                 onClick={(e) => subtractDrink(e, item)}
+                                                type="button"
                                             ></i>
-                                            <i className="bi bi-pencil-square mx-2 text-black"
+                                            <i
+                                                className="bi bi-pencil-square mx-2 text-black"
                                                 onClick={handleUpdateMenu}
+                                                type="button"
                                             ></i>
                                         </div>
                                     )}
@@ -298,7 +311,7 @@ function Menu() {
 
             <Footer />
 
-            <MenuModal isOpen={menuModalIsOpen} toggle={closeMenuModal} addNewItemToMenu={addedNewItemToMenu} selectedMenuItemData={selectedMenuItemData} addUpdatedMenuItem={addUpdatedMenuItem} />
+            <MenuModal isOpen={menuModalIsOpen} toggle={closeMenuModal} selectedMenuItemData={selectedMenuItemData} addNewItemToMenu={addedNewItemToMenu} addUpdatedMenuItem={addedUpdatedMenuItem} addDeletedMenuItem={addedDeletedMenuItem} />
 
         </>
     );

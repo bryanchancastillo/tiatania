@@ -1,12 +1,15 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { createPortal } from 'react-dom';
+import ConfirmModal from './ConfirmModal'; // Asegúrate de que la ruta sea correcta
 
 interface MenuModalProps {
     isOpen: boolean;
     toggle: () => void;
-    addNewItemToMenu: () => void;
     selectedMenuItemData?: any;
+    addNewItemToMenu: () => void;
     addUpdatedMenuItem: any;
+    addDeletedMenuItem: any;
 
 }
 
@@ -15,13 +18,15 @@ interface MenuItem {
     code: string;
 }
 
-function MenuModal({ isOpen, toggle, addNewItemToMenu, selectedMenuItemData, addUpdatedMenuItem }: MenuModalProps) {
+function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, addUpdatedMenuItem, addDeletedMenuItem }: MenuModalProps) {
+
     const [referenceMenuTypes, setReferenceMenuTypes] = useState<MenuItem[]>([]);
     const [selectedMenuTypeId, setSelectedMenuTypeId] = useState<number | ''>('');
     const [selectedMenuName, setSelectedMenuName] = useState<string | ''>('');
     const [selectedMenuPrice, setSelectedMenuPrice] = useState<number | ''>('');
     const [selectedMenuFile, setSelectedMenuFile] = useState<File | ''>('');
     const [previewImage, setPreviewImage] = useState(null);
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
 
     const imageName = selectedMenuFile ? selectedMenuFile.name : null;
 
@@ -54,6 +59,14 @@ function MenuModal({ isOpen, toggle, addNewItemToMenu, selectedMenuItemData, add
         } catch (error) {
             console.error('Error fetching menu types:', error);
         }
+    }
+
+    function handleOpenConfirmModal(){
+        setShowConfirmModal(true);
+    }
+
+    function handleCloseConfirmModal() {
+        setShowConfirmModal(false);
     }
 
     function handleMenuTypeIdChange(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -112,7 +125,6 @@ function MenuModal({ isOpen, toggle, addNewItemToMenu, selectedMenuItemData, add
 
             addNewItemToMenu(responseResult?.modal);
 
-            
         } catch (error) {
             console.error('Error creating menu item:', error);
         }
@@ -149,6 +161,35 @@ function MenuModal({ isOpen, toggle, addNewItemToMenu, selectedMenuItemData, add
 
     }
 
+    async function handleDeleteMenuItem(menuId: MenuItem) {
+        try {
+            const formData = new FormData();
+            formData.append('MenuId', selectedMenuItemData?.menuId.toString());
+
+            const response = await fetch('API/Menus/Delete/' + menuId, {
+                method: 'PUT',
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                body: formData,
+            });
+
+            const responseResult = await response.json();
+
+            console.log(responseResult)
+
+            if (responseResult?.modal?.menuId > 0) {
+                handleCloseConfirmModal();
+                toggle();
+                addDeletedMenuItem(responseResult?.modal?.menuId)
+            }
+
+        } catch (error) {
+            // Manejar errores de la solicitud
+            console.error('Error al eliminar el elemento:', error);
+        }
+    }
+
     function UpdateOrCreateMenuItem() {
         if (selectedMenuItemData?.menuId > 0) {
             handleUpdateMenuItem();
@@ -163,7 +204,6 @@ function MenuModal({ isOpen, toggle, addNewItemToMenu, selectedMenuItemData, add
             <Modal isOpen={isOpen} toggle={toggle}>
                 <ModalHeader toggle={toggle}>{selectedMenuItemData && selectedMenuItemData.menuId > 0 ? 'Editar bebida' : 'Agregar bebida'}</ModalHeader>
                 <ModalBody>
-
                     {selectedMenuItemData && selectedMenuItemData.menuTypeId > 0 ? null : (
                         <div className="col-12">
                             <label className="form-label">Tipo de bebida</label>
@@ -177,7 +217,6 @@ function MenuModal({ isOpen, toggle, addNewItemToMenu, selectedMenuItemData, add
                             </div>
                         </div>        
                     )}
-
                     <div className="row">
                         <div className="col-12">
                             <label className="form-label">Nombre</label>
@@ -208,9 +247,12 @@ function MenuModal({ isOpen, toggle, addNewItemToMenu, selectedMenuItemData, add
                             </div>
                         </div>
                     )}
-             
                 </ModalBody>
                 <ModalFooter>
+                    <Button color="danger" onClick={handleOpenConfirmModal}>
+                        <i className="bi bi-trash3 mx-1"></i>
+                        Eliminar
+                    </Button>
                     <Button color="primary" onClick={UpdateOrCreateMenuItem}>
                         Guardar
                     </Button>
@@ -219,7 +261,18 @@ function MenuModal({ isOpen, toggle, addNewItemToMenu, selectedMenuItemData, add
                     </Button>
                 </ModalFooter>
             </Modal>
+            {showConfirmModal && createPortal(
+                <ConfirmModal
+                    title="Confirm Recruitment Effort Removal"
+                    message="Are you sure you want to remove this Recruitment Effort?"
+                    onCancel={handleCloseConfirmModal}
+                    onConfirm={() => handleDeleteMenuItem(selectedMenuItemData?.menuId)}
+                />,
+                document.body
+            )}
         </div>
+
+
     );
 }
 
