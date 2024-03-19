@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-
+import { NavLink } from 'react-router-dom';
 function Navbar() {
 
     const navbar = useRef<HTMLDivElement>(null);
@@ -51,28 +51,28 @@ function Navbar() {
     return (
         <nav className="navbar navbar-dark navbar-expand-lg navbar-togglable fixed-top" ref={navbar}>
             <div className="container">
-                <a className="navbar-brand d-lg-none" href="/">Tia Tania</a>
+                <NavLink className="navbar-brand d-lg-none" to="/">Tia Tania</NavLink>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" ref={navbarToggler}  >
                     <i className="bi bi-list" style={{ fontSize: "1.7rem" }}></i>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarCollapse" ref={navbarCollapse}  >
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} href="/about">Sobre nosotros</a>
+                            <NavLink className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`} to="/about">Sobre nosotros</NavLink>
                         </li>
                         <li className="nav-item">
-                            <a className={`nav-link ${location.pathname === '/menu' ? 'active' : ''}`} href="/menu">Menu</a>
+                            <NavLink className={`nav-link ${location.pathname === '/menu' ? 'active' : ''}`} to="/menu">Menu</NavLink>
                         </li>
                     </ul>
-                    <a className="navbar-brand d-none d-lg-flex mx-lg-auto" href="/">
+                    <NavLink className="navbar-brand d-none d-lg-flex mx-lg-auto" to="/">
                         Tia Tania
-                    </a>
+                    </NavLink>
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className={`nav-link ${location.pathname === '/gallery' ? 'active' : ''}`} href="/gallery">Galeria</a>
+                            <NavLink className={`nav-link ${location.pathname === '/gallery' ? 'active' : ''}`} to="/gallery">Galeria</NavLink>
                         </li>
                         <li className="nav-item">
-                            <a className={`nav-link ${location.pathname === '/prices' ? 'active' : ''}`} href="/prices">Precios</a>
+                            <NavLink className={`nav-link ${location.pathname === '/prices' ? 'active' : ''}`} to="/prices">Precios</NavLink>
                         </li>
                     </ul>
                 </div>
