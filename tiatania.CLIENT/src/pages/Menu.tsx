@@ -1,11 +1,10 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Header from "../components/Header";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext }  from "../context/authContext.jsx";
+import { useEffect, useState } from "react";
 import MenuModal from "../components/MenuModal.js";
 const basePath = '../public/assets/img/';
-
+import UserContext from '../components/userContext'
 
 interface MenuItem {
     menuId: number;
@@ -15,8 +14,6 @@ interface MenuItem {
     imagePath: string;
 }
 function Menu() {
-
-    //const currentUser = useContext(AuthContext);
 
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [menuModalIsOpen, setMenuModalIsOpen] = useState(false);
@@ -183,18 +180,26 @@ function Menu() {
                                         </p>
                                     )}
                                     {selectedDrink.includes(item.menuId) && (
-                                        <div className="mx-1">
-                                            <i
-                                                className="bi bi-x-circle-fill text-danger"
-                                                onClick={(e) => subtractDrink(e, item)}
-                                                type="button"
-                                            ></i>
-                                            <i
-                                                className="bi bi-pencil-square mx-2 text-black"
-                                                onClick={handleUpdateMenu}
-                                                type="button"
-                                            ></i>
+                                        <div className="d-flex ">
+                                            <div className="mx-1">
+                                                <i
+                                                    className="bi bi-x-circle-fill text-danger"
+                                                    onClick={(e) => subtractDrink(e, item)}
+                                                    type="button"
+                                                ></i>
+
+                                            </div>
+                                            <div>
+                                                <UserContext rol="Admin">
+                                                    <i
+                                                        className="bi bi-pencil-square mx-1 text-black"
+                                                        onClick={handleUpdateMenu}
+                                                        type="button"
+                                                    ></i>
+                                                </UserContext>
+                                            </div>
                                         </div>
+                                        
                                     )}
                                 </div>
                             </div>
@@ -223,11 +228,13 @@ function Menu() {
 
             <Header title="Menu" />
 
-            <div className="d-flex justify-content-end">
-                <div className="inline-block bg-primary p-1 m-2" type="button" onClick={openMenuModal}>
-                    <i className=" bi bi-patch-plus mx-1 text-dark "></i>
+            <UserContext rol="Admin">
+                <div className="d-flex justify-content-end">
+                    <div className="inline-block bg-primary p-1 m-2" type="button" onClick={openMenuModal}>
+                        <i className=" bi bi-patch-plus mx-1 text-dark "></i>
+                    </div>
                 </div>
-            </div>
+            </UserContext>
 
             <section className="py-7 py-md-9 border-bottom">
                 <div className="container">
