@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function PageNotFound() {
 
     return (
@@ -9,7 +11,7 @@ function PageNotFound() {
                 <p className="lead">
                     La pagina que esta buscando no existe.
                 </p>
-                <a href="/" className="btn btn-primary">Go Home</a>
+                <Link to="/" className="btn btn-primary">Go Home</Link>
             </div>
         </div>
 

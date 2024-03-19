@@ -1,6 +1,7 @@
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Header from "../components/Header";
+import { Link } from "react-router-dom";
 
 function About() {
   return (
@@ -28,7 +29,7 @@ function About() {
                                   <a className="btn btn-outline-primary" href="tel:+18095376122"> LLamanos</a>
                               </p>
                               <p className="mx-2">
-                                  <a className="btn btn-outline-primary" href="/prices"> Precios</a>
+                                  <Link className="btn btn-outline-primary" to="/prices"> Precios</Link>
                               </p>
 
 
