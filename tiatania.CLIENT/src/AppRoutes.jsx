@@ -3,6 +3,7 @@ import PageNotFound from "./pages/PageNotFound";
 import Prices from "./pages/Prices";
 import About from "./pages/About";
 import Menu from "./pages/Menu";
+import Gallery from "./pages/Gallery";
 
 const AppRoutes = [
     {
@@ -24,6 +25,10 @@ const AppRoutes = [
     {
         path: 'menu',
         element: <Menu />
+    },
+    {
+        path: 'gallery',
+        element: <Gallery />
     },
 ];
 
