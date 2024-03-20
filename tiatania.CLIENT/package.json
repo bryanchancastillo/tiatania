@@ -14,6 +14,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/flickity": "^2.2.11",
     "@types/imagesloaded": "^4.1.6",
     "@types/isotope-layout": "^3.0.13",
     "@types/react": "^18.2.43",

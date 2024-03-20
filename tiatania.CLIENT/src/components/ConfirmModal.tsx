@@ -1,14 +1,6 @@
-
+import { ConfirmModalProps } from "../interfaces/ConfirmModalProps"
 import { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
-interface ConfirmModalProps {
-    entityId: string;
-    title: string;
-    message: string;
-    onCancel: () => void;
-    onConfirm: () => void;
-}
 
 function ConfirmModal(props: ConfirmModalProps) {
     const [modal, setModal] = useState(true);

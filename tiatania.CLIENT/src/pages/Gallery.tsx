@@ -25,61 +25,47 @@ interface IsotopeOptions {
 function Gallery() {
 
     function initializeFlickityCarousel() {
-
         const flickityOptions: FlickityOptions = {
             wrapAround: true,
             imagesLoaded: true,
         };
-
-        const carousel: any = new Flickity('.carousel', flickityOptions);
-
+        const carousel = new Flickity('.carousel', flickityOptions);
         imagesLoaded('.carousel').on('progress', () => {
             carousel.reloadCells();
             carousel.resize();
         });
-
         return carousel;
     }
 
     function handleBigPictureClick(toggle: HTMLElement) {
-
-        const elementOptions: any = JSON.parse(toggle.dataset.bigpicture || '{}');
-
+        const elementOptions = JSON.parse(toggle.dataset.bigpicture || '{}');
         const defaultOptions: BigPictureOptions = {
             el: toggle,
             noLoader: true,
         };
-
         const options: BigPictureOptions = {
             ...defaultOptions,
             ...elementOptions,
         };
-
         BigPicture(options);
     }
 
     function cleanupFlickityCarousel(carousel: Flickity) {
-
         carousel.destroy();
-
     }
 
     function initializeIsotope(isotopeElement: HTMLElement) {
-
         imagesLoaded(isotopeElement, () => {
             const options: IsotopeOptions = isotopeElement.dataset.isotope
                 ? JSON.parse(isotopeElement.dataset.isotope)
                 : {};
-
             new Isotope(isotopeElement, options);
-
         });
     }
 
     useEffect(() => {
-
         // Initialize the Flickity carousel
-        const carousel: any = initializeFlickityCarousel();
+        const carousel = initializeFlickityCarousel();
 
         // Get all elements with the attribute 'data-bigpicture'
         const toggles = document.querySelectorAll<HTMLElement>('[data-bigpicture]');
@@ -101,13 +87,10 @@ function Gallery() {
 
     // Initialize Isotope on mount
     useEffect(() => {
-
         const isotopeElements = document.querySelectorAll<HTMLElement>('[data-isotope]');
-
         isotopeElements.forEach((isotopeElement) => {
             initializeIsotope(isotopeElement);
         });
-
     }, []);
 
 
