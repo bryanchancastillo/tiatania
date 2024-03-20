@@ -40,7 +40,7 @@ function Menu() {
         setMenuItems(prevMenuItems => [...prevMenuItems, newMenuItem]);
     }
 
-    function addedUpdatedMenuItem(addedUpdatedMenuItem) {
+    function addedUpdatedMenuItem(addedUpdatedMenuItem: MenuItem) {
 
         // Find the index of the updated menu item in the menuItems array
         const itemIndex = menuItems.findIndex(item => item.menuId === addedUpdatedMenuItem.menuId);
@@ -60,7 +60,7 @@ function Menu() {
         // Optionally, perform any other actions needed after updating the menu items
     }
 
-    function addedDeletedMenuItem(menuIdToDelete) {
+    function addedDeletedMenuItem(menuIdToDelete: number) {
         // Filter out the menu item with the specified menuIdToDelete
         const updatedMenuItems = menuItems.filter(item => item.menuId !== menuIdToDelete);
         setMenuItems(updatedMenuItems); // Update the state with the filtered menu items
@@ -185,7 +185,6 @@ function Menu() {
                                                 <i
                                                     className="bi bi-x-circle-fill text-danger"
                                                     onClick={(e) => subtractDrink(e, item)}
-                                                    type="button"
                                                 ></i>
 
                                             </div>
@@ -194,7 +193,6 @@ function Menu() {
                                                     <i
                                                         className="bi bi-pencil-square mx-1 text-black"
                                                         onClick={handleUpdateMenu}
-                                                        type="button"
                                                     ></i>
                                                 </UserContext>
                                             </div>
@@ -230,7 +228,7 @@ function Menu() {
 
             <UserContext rol="Admin">
                 <div className="d-flex justify-content-end">
-                    <div className="inline-block bg-primary p-1 m-2" type="button" onClick={openMenuModal}>
+                    <div className="inline-block bg-primary p-1 m-2" onClick={openMenuModal}>
                         <i className=" bi bi-patch-plus mx-1 text-dark "></i>
                     </div>
                 </div>

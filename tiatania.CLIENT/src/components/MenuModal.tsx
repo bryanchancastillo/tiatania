@@ -1,31 +1,18 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { createPortal } from 'react-dom';
 import ConfirmModal from './ConfirmModal'; // Asegúrate de que la ruta sea correcta
-
-interface MenuModalProps {
-    isOpen: boolean;
-    toggle: () => void;
-    selectedMenuItemData?: any;
-    addNewItemToMenu: () => void;
-    addUpdatedMenuItem: any;
-    addDeletedMenuItem: any;
-
-}
-
-interface MenuItem {
-    referenceId: number;
-    code: string;
-}
+import { MenuModalProps } from "../interfaces/MenuModalProps"
+import { ReferenceMenuTypes } from "../interfaces/ReferenceMenuTypes"
 
 function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, addUpdatedMenuItem, addDeletedMenuItem }: MenuModalProps) {
 
-    const [referenceMenuTypes, setReferenceMenuTypes] = useState<MenuItem[]>([]);
+    const [referenceMenuTypes, setReferenceMenuTypes] = useState<ReferenceMenuTypes[]>([]);
     const [selectedMenuTypeId, setSelectedMenuTypeId] = useState<number | ''>('');
     const [selectedMenuName, setSelectedMenuName] = useState<string | ''>('');
     const [selectedMenuPrice, setSelectedMenuPrice] = useState<number | ''>('');
     const [selectedMenuFile, setSelectedMenuFile] = useState<File | ''>('');
-    const [previewImage, setPreviewImage] = useState(null);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
 
     const imageName = selectedMenuFile ? selectedMenuFile.name : null;
@@ -45,7 +32,6 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
                 setSelectedMenuFile('')
                 setPreviewImage(null);
             }
-   
         } 
            
     }, [isOpen]);
@@ -92,8 +78,8 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
             };
             reader.readAsDataURL(file);
         } else {
-            setSelectedMenuFile(null);
-            setPreviewImage(null);
+            setSelectedMenuFile(''); // Alterado para passar null quando não há arquivo selecionado
+            setPreviewImage('');
         }
     }
 
@@ -133,8 +119,15 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
     async function handleUpdateMenuItem() {
 
         const formData = new FormData();
-        formData.append('MenuId', selectedMenuItemData?.menuId.toString());
-        formData.append('MenuTypeId', selectedMenuItemData?.menuTypeId.toString());
+
+        if (selectedMenuItemData && selectedMenuItemData.menuId !== undefined) {
+            formData.append('MenuId', selectedMenuItemData.menuId.toString());
+        }
+
+        if (selectedMenuItemData && selectedMenuItemData.menuId !== undefined) {
+            formData.append('MenuTypeId', selectedMenuItemData.menuTypeId.toString());
+        }
+
         formData.append('Name', selectedMenuName || '');
         formData.append('Price', selectedMenuPrice?.toString() || '');
 
@@ -161,10 +154,13 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
 
     }
 
-    async function handleDeleteMenuItem(menuId: MenuItem) {
+    async function handleDeleteMenuItem(menuId: number) {
         try {
             const formData = new FormData();
-            formData.append('MenuId', selectedMenuItemData?.menuId.toString());
+
+            if (selectedMenuItemData && selectedMenuItemData.menuId !== undefined) {
+                formData.append('MenuId', selectedMenuItemData.menuId.toString());
+            }
 
             const response = await fetch('API/Menus/Delete/' + menuId, {
                 method: 'PUT',
@@ -191,13 +187,13 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
     }
 
     function UpdateOrCreateMenuItem() {
-        if (selectedMenuItemData?.menuId > 0) {
+        if (selectedMenuItemData && selectedMenuItemData.menuId !== undefined && selectedMenuItemData.menuId > 0) {
             handleUpdateMenuItem();
-        }
-        else {
+        } else {
             handleCreateMenuItem();
         }
     }
+
 
     return (
         <div>
@@ -268,7 +264,11 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
                     title="Confirmacion para borrar esta bebida"
                     message="Estas seguro de que quieres borrar esta bebida?"
                     onCancel={handleCloseConfirmModal}
-                    onConfirm={() => handleDeleteMenuItem(selectedMenuItemData?.menuId)}
+                    onConfirm={() => {
+                        if (selectedMenuItemData && selectedMenuItemData.menuId !== undefined) {
+                            handleDeleteMenuItem(selectedMenuItemData.menuId);
+                        }
+                    }}
                 />,
                 document.body
             )}
