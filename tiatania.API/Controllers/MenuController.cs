@@ -117,14 +117,7 @@ namespace tiatania.API.Controllers
             menu.UpdatedBy = _appSession.CurrentUserId;
             menu.UpdatedOn = DateTime.UtcNow;
 
-            if (menu.MenuId == 0)
-            {
-                _context.Menus.Add(menu);
-            }
-            else
-            {
-                _context.Menus.Update(menu);
-            }
+            _context.Menus.Add(menu);
 
             await _context.SaveChangesAsync();
 

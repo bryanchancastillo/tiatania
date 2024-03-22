@@ -9,45 +9,36 @@ using tiatania.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Add services to the container.
+// Configuraci?n de servicios
 builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen();
 
-//Get connection string from configuration
+// Configuraci?n de la base de datos
 builder.Configuration.AddJsonFile("connectionString.json", optional: true);
+builder.Services.AddDbContext<TiataniaContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("TiataniaDatabase"), ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("TiataniaDatabase")))
+);
 
-builder.Services.AddDbContext<TiataniaContext>(options => options.UseMySql(builder.Configuration.GetConnectionString("TiataniaDatabase"), ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("TiataniaDatabase"))));
-
-//Identity
+// Configuraci?n de Identity
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<Role>()
     .AddEntityFrameworkStores<TiataniaContext>();
 
-// AppSession
+// Agregar servicio de sesi?n de aplicaci?n
 builder.Services.AddTransient<IAppSession, AppSession>();
 
-// Razor
+// Configuraci?n de Razor Pages
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-
-
-// Configure the HTTP request pipeline.
+// Middleware y configuraci?n de la aplicaci?n
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 app.UseRouting();
 
@@ -56,10 +47,20 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller}/{action=Index}/{id?}");
 
-app.MapFallbackToFile("/index.html");
+    endpoints.MapRazorPages();
 
-app.MapRazorPages();
+    endpoints.MapControllers();
+
+    endpoints.MapFallbackToFile("/index.html");
+});
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.Run();

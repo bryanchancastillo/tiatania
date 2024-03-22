@@ -37,4 +37,8 @@
     <ProjectReference Include="..\tiatania.DAL\tiatania.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
 </Project>
