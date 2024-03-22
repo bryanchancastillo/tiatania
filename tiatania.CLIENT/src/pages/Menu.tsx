@@ -165,7 +165,8 @@ function Menu() {
                                 <div className="ratio ratio-1x1">
                                     <img
                                         className="object-fit-cover"
-                                        src={`https://localhost:7042/uploads/${item.imagePath}`}
+                                        /*Dominio name arreglar esto*/
+                                        src={`https://hesrol.somee.com/uploads/${item.imagePath}`}
                                         alt="..."
                                     />
                                 </div>
