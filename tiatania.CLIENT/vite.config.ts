@@ -58,7 +58,13 @@ export default defineConfig({
              '^/content': {
                 target: 'https://localhost:7042/',
                 secure: false
-            }
+            },
+            '^/uploads': {
+                target: 'https://localhost:7042/',
+                secure: false
+            },
+
+
         },
         port: 5173,
         https: {

@@ -166,7 +166,7 @@ function Menu() {
                                     <img
                                         className="object-fit-cover"
                                         /*Dominio name arreglar esto*/
-                                        src={`https://hesrol.somee.com/uploads/${item.imagePath}`}
+                                        src={`/uploads/${item.imagePath}`}
                                         alt="..."
                                     />
                                 </div>
