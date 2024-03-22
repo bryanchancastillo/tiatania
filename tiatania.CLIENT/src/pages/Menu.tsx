@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 import { useEffect, useState } from "react";
 import MenuModal from "../components/MenuModal.js";
-const basePath = '../public/assets/img/';
+
 import UserContext from '../components/userContext'
 
 interface MenuItem {
@@ -137,7 +137,6 @@ function Menu() {
             headers: { 'Content-Type': 'application/json' },
             redirect: 'follow', // manual, *follow, error
             referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            //body: { id: recruitmentEffortId } // body data type must match "Content-Type" header);
         });
 
         const responseResult = await response.json();
@@ -166,7 +165,8 @@ function Menu() {
                                 <div className="ratio ratio-1x1">
                                     <img
                                         className="object-fit-cover"
-                                        src={basePath + item.imagePath}
+                                        /*Dominio name arreglar esto*/
+                                        src={`/uploads/${item.imagePath}`}
                                         alt="..."
                                     />
                                 </div>

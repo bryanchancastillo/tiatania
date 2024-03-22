@@ -90,8 +90,14 @@ namespace tiatania.API.Controllers
         [HttpPost("Create")]
         public async Task<ActionResult> Create(Menu model)
         {
-      
             var uploadDirectory = _configuration["UploadDirectory"];
+
+            // Verificar si la carpeta de destino existe
+            if (!Directory.Exists(uploadDirectory))
+            {
+                // Crear la carpeta si no existe
+                Directory.CreateDirectory(uploadDirectory);
+            }
 
             var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
             var filePath = Path.Combine(uploadDirectory, fileName);
@@ -117,20 +123,14 @@ namespace tiatania.API.Controllers
             menu.UpdatedBy = _appSession.CurrentUserId;
             menu.UpdatedOn = DateTime.UtcNow;
 
-            if (menu.MenuId == 0)
-            {
-                _context.Menus.Add(menu);
-            }
-            else
-            {
-                _context.Menus.Update(menu);
-            }
+            _context.Menus.Add(menu);
 
             await _context.SaveChangesAsync();
 
             model.MenuId = menu.MenuId;
             return new JsonResult(new { Message = "Successfully created a new Menu item.", Modal = model });
         }
+
 
 
         [Authorize]
