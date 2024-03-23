@@ -1,2 +1,87 @@
 //Add customs notifications here
 
+.notification__custom-icon {
+    flex-basis: 20%;
+    position: relative;
+    padding: 8px 8px 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .bi {
+        color: #fff;
+        font-size: 28px;
+    }
+}
+
+.notification__custom {
+    flex-basis: 80%;
+    padding: 12px 12px 12px 8px;
+    display: inline-block;
+
+    .notification__custom-title {
+        font-weight: bold;
+        font-size: 16px;
+
+        p::first-letter {
+            text-transform: capitalize;
+        }
+
+        p {
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.notification__custom--success {
+    width: 100%;
+    display: flex;
+    background-color: #28a745;
+    color: $white;
+
+    .notification__custom-icon {
+        border-left: 8px solid darken(#28a745, 15%);
+    }
+}
+
+.notification__custom--default {
+    width: 100%;
+    display: flex;
+    background-color: #007bff;
+    color: $white;
+
+    .notification__custom-icon {
+        border-left: 8px solid darken(#007bff, 15%);
+    }
+}
+
+.notification__custom--danger {
+    width: 100%;
+    display: flex;
+    background-color: #dc3545;
+
+    .notification__custom-icon {
+        border-left: 8px solid darken(#dc3545, 15%);
+    }
+}
+
+.notification__custom--info {
+    width: 100%;
+    display: flex;
+    background-color: #17a2b8;
+
+    .notification__custom-icon {
+        border-left: 8px solid darken(#17a2b8, 15%);
+    }
+}
+
+.notification__custom--warning {
+    width: 100%;
+    display: flex;
+    background-color: #eab000;
+
+    .notification__custom-icon {
+        border-left: 8px solid darken(#eab000, 15%);
+    }
+}
+

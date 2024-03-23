@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using tiatania.API.Models.Base;
 
 namespace tiatania.API.Models
 {
-    public class Menu
+    public class Menu : ModelBase
     {
       public int MenuId { get; set; }
 

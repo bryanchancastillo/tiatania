@@ -155,16 +155,24 @@ namespace tiatania.API.Controllers
                 var total = _context.SaveChanges();
 
                 if (total > 0)
-                    return new JsonResult(new { Message = "Successfully updated the menu item.", Modal = model });
+                {
+                    model.AddMessage("Succesfully updated the menu item");
+                    return new JsonResult(model);
+                    // return new JsonResult(new { Message = "Successfully updated the menu item.", Modal = model });
+                }
 
             }
 
             catch (Exception ex)
             {
-                return new JsonResult(string.Format("[{0},{1}]", ex.Message, ex.InnerException?.Message));
+                model.AddExceptionError(ex);
+                return new JsonResult(model);
+                //return new JsonResult(string.Format("[{0},{1}]", ex.Message, ex.InnerException?.Message));
             }
 
-            return new JsonResult("This didn't work as expected.");
+            model.AddError("The request to update the menu item didn't work as expected.");
+            return new JsonResult(model);
+           // return new JsonResult("This didn't work as expected.");
 
         }
 

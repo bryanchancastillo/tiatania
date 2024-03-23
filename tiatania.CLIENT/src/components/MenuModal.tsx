@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import ConfirmModal from './ConfirmModal'; // Asegúrate de que la ruta sea correcta
 import { MenuModalProps } from "../interfaces/MenuModalProps"
 import { ReferenceMenuTypes } from "../interfaces/ReferenceMenuTypes"
+import { renderNotificationsFromBackEnd } from '../misc/utils';
 
 function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, addUpdatedMenuItem, addDeletedMenuItem }: MenuModalProps) {
 
@@ -14,6 +15,7 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
     const [selectedMenuFile, setSelectedMenuFile] = useState<File | ''>('');
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+    const [validationErrors, setValidationErrors] = useState('');
 
     const imageName = selectedMenuFile ? selectedMenuFile.name : null;
 
@@ -38,13 +40,9 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
 
 
     async function populateMenuReferenceTypes() {
-        try {
-            const response = await fetch('/API/References/MenuTypes');
-            const data = await response.json();
-            setReferenceMenuTypes(data);
-        } catch (error) {
-            console.error('Error fetching menu types:', error);
-        }
+        const response = await fetch('/API/References/MenuTypes');
+        const data = await response.json();
+        setReferenceMenuTypes(data);
     }
 
     function handleOpenConfirmModal(){
@@ -78,7 +76,7 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
             };
             reader.readAsDataURL(file);
         } else {
-            setSelectedMenuFile(''); // Alterado para passar null quando não há arquivo selecionado
+            setSelectedMenuFile('');
             setPreviewImage('');
         }
     }
@@ -89,7 +87,7 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
         formData.append('MenuTypeId', selectedMenuTypeId.toString());
         formData.append('Name', selectedMenuName || '');
         formData.append('Price', selectedMenuPrice?.toString() || '');
-        formData.append('ImagePath', imageName || ''); // Append imageName correctly
+        formData.append('ImagePath', imageName || '');
         formData.append('File', selectedMenuFile || '');
 
         try {
@@ -139,18 +137,19 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
             body: formData,
         });
 
-        const dataFromServer = await response.json();
+        const responseResult = await response.json();
 
-        // console.log(dataFromServer)
+        console.log(responseResult)
+        //we should set the errors variable even if there are no errors to get rid of previous errors
+        setValidationErrors(responseResult.errors);
 
-        if (dataFromServer?.message?.indexOf("Successfully") > -1) {
-            addUpdatedMenuItem(dataFromServer?.modal)
+
+        if (responseResult != null && responseResult.success && responseResult.menuId > 0) {
+            addUpdatedMenuItem(responseResult)
             toggle();
+            renderNotificationsFromBackEnd(responseResult);
         }
-
-        if (dataFromServer.model == null) {
-            console.log(dataFromServer);
-        }
+     
 
     }
 
