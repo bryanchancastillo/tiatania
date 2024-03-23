@@ -38,7 +38,6 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
            
     }, [isOpen]);
 
-
     async function populateMenuReferenceTypes() {
         const response = await fetch('/API/References/MenuTypes');
         const data = await response.json();
@@ -90,28 +89,27 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
         formData.append('ImagePath', imageName || '');
         formData.append('File', selectedMenuFile || '');
 
-        try {
-            const response = await fetch("API/Menus/Create", {
-                method: 'POST',
-                mode: 'cors',
-                cache: 'no-cache',
-                credentials: 'same-origin',
-                body: formData,
-            });
+        const response = await fetch("API/Menus/Create", {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            body: formData,
+        });
 
-            const responseResult = await response.json();
+        const responseResult = await response.json();
 
-           // console.log(responseResult);
+        setValidationErrors(responseResult.errors);
 
-            if (responseResult.modal.menuId > 0) {
-                toggle();
-            }
-
-            addNewItemToMenu(responseResult?.modal);
-
-        } catch (error) {
-            console.error('Error creating menu item:', error);
+        if (responseResult != null && responseResult.success && responseResult.menuId > 0) {
+            addNewItemToMenu(responseResult)
+            toggle();
+            renderNotificationsFromBackEnd(responseResult);
+        } else {
+            renderNotificationsFromBackEnd(responseResult);
         }
+
+       
     }
 
     async function handleUpdateMenuItem() {
@@ -122,7 +120,7 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
             formData.append('MenuId', selectedMenuItemData.menuId.toString());
         }
 
-        if (selectedMenuItemData && selectedMenuItemData.menuId !== undefined) {
+        if (selectedMenuItemData && selectedMenuItemData.menuTypeId !== undefined) {
             formData.append('MenuTypeId', selectedMenuItemData.menuTypeId.toString());
         }
 
@@ -139,14 +137,13 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
 
         const responseResult = await response.json();
 
-        console.log(responseResult)
-        //we should set the errors variable even if there are no errors to get rid of previous errors
         setValidationErrors(responseResult.errors);
-
 
         if (responseResult != null && responseResult.success && responseResult.menuId > 0) {
             addUpdatedMenuItem(responseResult)
             toggle();
+            renderNotificationsFromBackEnd(responseResult);
+        } else {
             renderNotificationsFromBackEnd(responseResult);
         }
      
@@ -216,7 +213,8 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
                         <div className="col-12">
                             <label className="form-label">Nombre</label>
                             <div className="input-group mb-3">
-                                <input type="text" className="form-control" name="Name" value={selectedMenuName} onChange={handleMenuNameChange} />
+                                <input type="text" className="form-control" name="Name" required value={selectedMenuName} onChange={handleMenuNameChange} />
+                             
 
                             </div>
                         </div>

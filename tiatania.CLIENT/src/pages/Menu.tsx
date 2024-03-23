@@ -3,7 +3,6 @@ import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 import { useEffect, useState } from "react";
 import MenuModal from "../components/MenuModal.js";
-
 import UserContext from '../components/userContext'
 
 interface MenuItem {

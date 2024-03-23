@@ -15,7 +15,7 @@ export function renderNotifications(notificationMessages : Array<notificationMes
      });
 }
 
-export function renderNotificationsFromBackEnd(responseResult : any) {
+export function renderNotificationsFromBackEnd(responseResult) {
 
   if(responseResult == null || responseResult == undefined || responseResult.messages == null || responseResult.messages.length < 1)
     return;

@@ -59,6 +59,7 @@
     width: 100%;
     display: flex;
     background-color: #dc3545;
+    color: $white;
 
     .notification__custom-icon {
         border-left: 8px solid darken(#dc3545, 15%);
@@ -69,6 +70,7 @@
     width: 100%;
     display: flex;
     background-color: #17a2b8;
+    color: $white;
 
     .notification__custom-icon {
         border-left: 8px solid darken(#17a2b8, 15%);
@@ -79,6 +81,7 @@
     width: 100%;
     display: flex;
     background-color: #eab000;
+    color: $white;
 
     .notification__custom-icon {
         border-left: 8px solid darken(#eab000, 15%);
