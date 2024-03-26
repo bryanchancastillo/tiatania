@@ -81,6 +81,7 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
     }
 
     async function handleCreateMenuItem() {
+
         const formData = new FormData();
 
         formData.append('MenuTypeId', selectedMenuTypeId.toString());
@@ -105,11 +106,8 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
             addNewItemToMenu(responseResult)
             toggle();
             renderNotificationsFromBackEnd(responseResult);
-        } else {
-            renderNotificationsFromBackEnd(responseResult);
-        }
-
-       
+        } 
+        
     }
 
     async function handleUpdateMenuItem() {
@@ -143,43 +141,37 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
             addUpdatedMenuItem(responseResult)
             toggle();
             renderNotificationsFromBackEnd(responseResult);
-        } else {
-            renderNotificationsFromBackEnd(responseResult);
-        }
-     
-
+        } 
+        
     }
 
     async function handleDeleteMenuItem(menuId: number) {
-        try {
-            const formData = new FormData();
 
-            if (selectedMenuItemData && selectedMenuItemData.menuId !== undefined) {
-                formData.append('MenuId', selectedMenuItemData.menuId.toString());
-            }
+        const formData = new FormData();
 
-            const response = await fetch('API/Menus/Delete/' + menuId, {
-                method: 'PUT',
-                mode: 'cors',
-                cache: 'no-cache',
-                credentials: 'same-origin',
-                body: formData,
-            });
-
-            const responseResult = await response.json();
-
-            console.log(responseResult)
-
-            if (responseResult?.modal?.menuId > 0) {
-                handleCloseConfirmModal();
-                toggle();
-                addDeletedMenuItem(responseResult?.modal?.menuId)
-            }
-
-        } catch (error) {
-            // Manejar errores de la solicitud
-            console.error('Error al eliminar el elemento:', error);
+        if (selectedMenuItemData && selectedMenuItemData.menuId !== undefined) {
+            formData.append('MenuId', selectedMenuItemData.menuId.toString());
         }
+
+        const response = await fetch('API/Menus/Delete/' + menuId, {
+            method: 'PUT',
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            body: formData,
+        });
+
+        const responseResult = await response.json();
+
+        // console.log(responseResult)
+
+        if (responseResult != null && responseResult.success) {
+            handleCloseConfirmModal();
+            toggle();
+            addDeletedMenuItem(menuId)
+            renderNotificationsFromBackEnd(responseResult);
+        } 
+       
     }
 
     function UpdateOrCreateMenuItem() {

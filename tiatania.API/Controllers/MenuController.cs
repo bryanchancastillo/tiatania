@@ -208,32 +208,45 @@ namespace tiatania.API.Controllers
 
         [Authorize]
         [HttpPut("Delete/{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var menu = _context.Menus.FirstOrDefault(menu => menu.MenuId == id && menu.Active);
 
-            if (menu == null)
+            var returnModel = new ModelBase();
+
+            try
             {
-                return NotFound();
+                var menu = _context.Menus.FirstOrDefault(menu => menu.MenuId == id && menu.Active);
+
+                if (menu == null)
+                {
+                    return NotFound();
+                }
+
+                var uploadDirectory = _configuration["UploadDirectory"];
+                var filePath = Path.Combine(uploadDirectory, menu.ImagePath);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                //menu.ImagePath = ""; // Clear the image path
+                menu.Active = false; // Set the active status to false
+                menu.UpdatedBy = _appSession.CurrentUserId;
+                menu.UpdatedOn = DateTime.UtcNow;
+
+                _context.Menus.Update(menu);
+                await _context.SaveChangesAsync();
+
+                returnModel.AddMessage("The menu item has been successfully deleted.");
+                return new JsonResult(returnModel);
+
             }
-
-            var uploadDirectory = _configuration["UploadDirectory"];
-            var filePath = Path.Combine(uploadDirectory, menu.ImagePath);
-
-            if (System.IO.File.Exists(filePath))
+            catch(Exception ex)
             {
-                System.IO.File.Delete(filePath);
+                returnModel.AddExceptionError(ex);
+                return new JsonResult(returnModel);
             }
-
-            menu.ImagePath = ""; // Clear the image path
-            menu.Active = false; // Set the active status to false
-            menu.UpdatedBy = _appSession.CurrentUserId;
-            menu.UpdatedOn = DateTime.UtcNow;
-
-            _context.Menus.Update(menu);
-            await _context.SaveChangesAsync();
-
-            return new JsonResult(new { Message = "Successfully deleted the image and set active status to false.", Modal = menu });
         }
 
     }
