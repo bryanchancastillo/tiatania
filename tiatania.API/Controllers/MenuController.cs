@@ -94,6 +94,15 @@ namespace tiatania.API.Controllers
             try
             {
 
+
+                var existingMenuItem = _context.Menus.FirstOrDefault(m => m.Name == model.Name && m.MenuId != model.MenuId && m.Active == true);
+
+                if (existingMenuItem != null)
+                {
+                    model.AddFieldError("An active menu with the provided name already exists. Please choose a different name.", "Name", ModelBase.MessageType.Error);
+                    return new JsonResult(model);
+                }
+
                 var uploadDirectory = _configuration["UploadDirectory"];
 
                 if (!Directory.Exists(uploadDirectory))
@@ -178,7 +187,7 @@ namespace tiatania.API.Controllers
 
                 if (existingMenuItem != null)
                 {
-                    model.AddError("An active menu with the provided name already exists. Please choose a different name.");
+                    model.AddFieldError("An active menu with the provided name already exists. Please choose a different name.", "Name", ModelBase.MessageType.Error);
                     return new JsonResult(model);
                 }
 

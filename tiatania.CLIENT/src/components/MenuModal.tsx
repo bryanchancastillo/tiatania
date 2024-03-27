@@ -5,6 +5,7 @@ import ConfirmModal from './ConfirmModal'; // Asegúrate de que la ruta sea corre
 import { MenuModalProps } from "../interfaces/MenuModalProps"
 import { ReferenceMenuTypes } from "../interfaces/ReferenceMenuTypes"
 import { renderNotificationsFromBackEnd } from '../misc/utils';
+import { Store } from 'react-notifications-component'; // Importa Store desde react-notifications-component
 
 function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, addUpdatedMenuItem, addDeletedMenuItem }: MenuModalProps) {
 
@@ -15,7 +16,7 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
     const [selectedMenuFile, setSelectedMenuFile] = useState<File | ''>('');
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-    const [validationErrors, setValidationErrors] = useState('');
+    const [validationErrors, setValidationErrors] = useState([]);
 
     const imageName = selectedMenuFile ? selectedMenuFile.name : null;
 
@@ -33,6 +34,11 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
                 setSelectedMenuTypeId('')
                 setSelectedMenuFile('')
                 setPreviewImage(null);
+        
+            }
+
+            if (validationErrors != null || validationErrors != '') {
+                setValidationErrors([])
             }
         } 
            
@@ -82,13 +88,28 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
 
     async function handleCreateMenuItem() {
 
-        const formData = new FormData();
+        if (!selectedMenuTypeId || !selectedMenuName || !selectedMenuPrice || !imageName || !selectedMenuFile) {
 
+            Store.addNotification({
+                title: 'Error',
+                message: 'Por favor complete todos los campos obligatorios.',
+                type: 'danger',
+                insert: 'top',
+                container: 'top-right',
+                dismiss: {
+                    duration: 3000,
+                    onScreen: true
+                }
+            });
+            return;
+        }
+
+        const formData = new FormData();
         formData.append('MenuTypeId', selectedMenuTypeId.toString());
-        formData.append('Name', selectedMenuName || '');
-        formData.append('Price', selectedMenuPrice?.toString() || '');
-        formData.append('ImagePath', imageName || '');
-        formData.append('File', selectedMenuFile || '');
+        formData.append('Name', selectedMenuName);
+        formData.append('Price', selectedMenuPrice.toString());
+        formData.append('ImagePath', imageName);
+        formData.append('File', selectedMenuFile);
 
         const response = await fetch("API/Menus/Create", {
             method: 'POST',
@@ -103,14 +124,32 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
         setValidationErrors(responseResult.errors);
 
         if (responseResult != null && responseResult.success && responseResult.menuId > 0) {
-            addNewItemToMenu(responseResult)
+            addNewItemToMenu(responseResult);
             toggle();
             renderNotificationsFromBackEnd(responseResult);
-        } 
-        
+        } else {
+            renderNotificationsFromBackEnd(responseResult);
+        }
     }
 
+
     async function handleUpdateMenuItem() {
+
+        if (!selectedMenuName || !selectedMenuPrice) {
+
+            Store.addNotification({
+                title: 'Error',
+                message: 'Por favor complete todos los campos obligatorios.',
+                type: 'danger',
+                insert: 'top',
+                container: 'top-right',
+                dismiss: {
+                    duration: 3000,
+                    onScreen: true
+                }
+            });
+            return;
+        }
 
         const formData = new FormData();
 
@@ -141,7 +180,9 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
             addUpdatedMenuItem(responseResult)
             toggle();
             renderNotificationsFromBackEnd(responseResult);
-        } 
+        } else {
+            renderNotificationsFromBackEnd(responseResult);
+        }
         
     }
 
@@ -163,14 +204,14 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
 
         const responseResult = await response.json();
 
-        // console.log(responseResult)
-
         if (responseResult != null && responseResult.success) {
             handleCloseConfirmModal();
             toggle();
             addDeletedMenuItem(menuId)
             renderNotificationsFromBackEnd(responseResult);
-        } 
+        } else {
+            renderNotificationsFromBackEnd(responseResult);
+        }
        
     }
 
@@ -182,32 +223,31 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
         }
     }
 
-
     return (
         <div>
             <Modal isOpen={isOpen} toggle={toggle}>
                 <ModalHeader toggle={toggle}>{selectedMenuItemData && selectedMenuItemData.menuId > 0 ? 'Editar bebida' : 'Agregar bebida'}</ModalHeader>
-                <ModalBody>
+                <ModalBody className={Array.from(validationErrors).length > 0 ? "modal-body was-validated" : "modal-body"}>
                     {selectedMenuItemData && selectedMenuItemData.menuTypeId > 0 ? null : (
                         <div className="col-12">
                             <label className="form-label">Tipo de bebida</label>
                             <div className="input-group mb-3">
-                                <select className="form-select" name="MenuTypeId" onChange={handleMenuTypeIdChange}>
+                                <select className={Array.from(validationErrors).filter(v => v.key === "MenuTypeId").length > 0 ? "is-invalid form-select" : "form-select"} name="MenuTypeId" onChange={handleMenuTypeIdChange} required>
                                     <option value="">Selecciona tipo de bebida</option>
                                     {referenceMenuTypes.map((option, index) => (
                                         <option key={index} value={option.referenceId}>{option.code}</option>
                                     ))}
                                 </select>
+                                {Array.from(validationErrors).filter(v => v.key === "MenuTypeId").length > 0 && <div className="invalid-feedback"> {Array.from(validationErrors).filter(v => v.key === "MenuTypeId")[0].text}</div>}
                             </div>
-                        </div>        
+                        </div>
                     )}
                     <div className="row">
                         <div className="col-12">
                             <label className="form-label">Nombre</label>
                             <div className="input-group mb-3">
-                                <input type="text" className="form-control" name="Name" required value={selectedMenuName} onChange={handleMenuNameChange} />
-                             
-
+                                <input type="text" className={Array.from(validationErrors).filter(v => v.key === "Name").length > 0 ? "is-invalid form-control" : "form-control"} name="Name" required value={selectedMenuName} onChange={handleMenuNameChange} />
+                                {Array.from(validationErrors).filter(v => v.key === "Name").length > 0 && <div className="invalid-feedback"> {Array.from(validationErrors).filter(v => v.key === "Name")[0].text}</div>}
                             </div>
                         </div>
                     </div>
@@ -215,7 +255,8 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
                         <div className="col-12">
                             <label className="form-label">Precio</label>
                             <div className="input-group mb-3">
-                                <input type="number" className="form-control" name="Price" value={selectedMenuPrice} onChange={handleMenuPriceChange} />
+                                <input type="number" className={Array.from(validationErrors).filter(v => v.key === "Price").length > 0 ? "is-invalid form-control" : "form-control"} name="Price" required value={selectedMenuPrice} onChange={handleMenuPriceChange} />
+                                {Array.from(validationErrors).filter(v => v.key === "Price").length > 0 && <div className="invalid-feedback"> {Array.from(validationErrors).filter(v => v.key === "Price")[0].text}</div>}
                             </div>
                         </div>
                     </div>
@@ -224,7 +265,8 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
                             <div className="col-12">
                                 <label className="form-label">Imagen</label>
                                 <div className="input-group mb-3">
-                                    <input type="file" className="form-control" name="File"  onChange={handleImageChange} />
+                                    <input type="file" className={Array.from(validationErrors).filter(v => v.key === "File").length > 0 ? "is-invalid form-control" : "form-control"} name="File" required onChange={handleImageChange} />
+                                    {Array.from(validationErrors).filter(v => v.key === "File").length > 0 && <div className="invalid-feedback"> {Array.from(validationErrors).filter(v => v.key === "File")[0].text}</div>}
                                 </div>
                                 <div className="text-center">
                                     {previewImage && <img src={previewImage} alt="Preview" style={{ width: "110.5px", height: "110.5px" }} />}
@@ -233,6 +275,7 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
                         </div>
                     )}
                 </ModalBody>
+
                 <ModalFooter>
                     <Button color="secondary" onClick={toggle}>
                         Cancelar
