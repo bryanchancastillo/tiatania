@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import ConfirmModal from './ConfirmModal';
 import { MenuModalProps } from "../interfaces/MenuModalProps"
 import { ReferenceMenuTypes } from "../interfaces/ReferenceMenuTypes"
+import { ValidationError } from "../interfaces/ValidationError"
 import { renderNotificationsFromBackEnd } from '../misc/utils';
 import { Store } from 'react-notifications-component';
 
@@ -16,7 +17,7 @@ function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, add
     const [selectedMenuFile, setSelectedMenuFile] = useState<File | ''>('');
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-    const [validationErrors, setValidationErrors] = useState([]);
+    const [validationErrors, setValidationErrors] = useState <ValidationError[]>([])
 
     const imageName = selectedMenuFile ? selectedMenuFile.name : null;
 
