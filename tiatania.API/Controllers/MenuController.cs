@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using tiatania.API.Services.Interfaces;
 using tiatania.API.Services;
+using tiatania.API.Models.Base;
 
 
 
@@ -90,61 +91,104 @@ namespace tiatania.API.Controllers
         [HttpPost("Create")]
         public async Task<ActionResult> Create(Menu model)
         {
-            var uploadDirectory = _configuration["UploadDirectory"];
-
-            // Verificar si la carpeta de destino existe
-            if (!Directory.Exists(uploadDirectory))
+            try
             {
-                // Crear la carpeta si no existe
-                Directory.CreateDirectory(uploadDirectory);
+
+
+                var existingMenuItem = _context.Menus.FirstOrDefault(m => m.Name == model.Name && m.MenuId != model.MenuId && m.Active == true);
+
+                if (existingMenuItem != null)
+                {
+                    model.AddFieldError("An active menu with the provided name already exists. Please choose a different name.", "Name", ModelBase.MessageType.Error);
+                    return new JsonResult(model);
+                }
+
+                var uploadDirectory = _configuration["UploadDirectory"];
+
+                if (!Directory.Exists(uploadDirectory))
+                {
+                    Directory.CreateDirectory(uploadDirectory);
+                }
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
+                var filePath = Path.Combine(uploadDirectory, fileName);
+
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    model.File.CopyTo(stream);
+                }
+
+                model.ImagePath = fileName;
+
+                var menu = _context.Menus.FirstOrDefault(m => m.MenuId == model.MenuId
+                    && m.MenuTypeId == model.MenuTypeId && m.Active) ??
+                    new DAL.Models.Menu();
+
+
+                menu.MenuTypeId = model.MenuTypeId;
+                menu.Name = model.Name;
+                menu.Price = model.Price;
+                menu.ImagePath = model.ImagePath;
+                menu.Active = true;
+                menu.CreatedBy = _appSession.CurrentUserId;
+                menu.CreatedOn = DateTime.Now;
+                menu.UpdatedBy = _appSession.CurrentUserId;
+                menu.UpdatedOn = DateTime.UtcNow;
+
+                _context.Menus.Add(menu);
+
+                var total = await _context.SaveChangesAsync();
+
+
+                if (total > 0)
+                {
+                    model.MenuId = menu.MenuId;
+                    model.AddMessage("Successfully added new menu item.");
+                    return new JsonResult(model);
+
+                }
+
+                
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                model.AddExceptionError(ex);
+            }
+            catch (DbUpdateException ex)
+            {
+                model.AddExceptionError(ex);
+            }
+            catch (Exception ex)
+            {
+                model.AddExceptionError(ex);
             }
 
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
-            var filePath = Path.Combine(uploadDirectory, fileName);
-
-            using (var stream = System.IO.File.Create(filePath))
-            {
-                model.File.CopyTo(stream);
-            }
-
-            model.ImagePath = fileName;
-
-            var menu = _context.Menus.FirstOrDefault(m => m.MenuId == model.MenuId
-                && m.MenuTypeId == model.MenuTypeId && m.Active) ??
-                new DAL.Models.Menu();
-
-            menu.MenuTypeId = model.MenuTypeId;
-            menu.Name = model.Name;
-            menu.Price = model.Price;
-            menu.ImagePath = model.ImagePath;
-            menu.Active = true;
-            menu.CreatedBy = _appSession.CurrentUserId;
-            menu.CreatedOn = DateTime.Now;
-            menu.UpdatedBy = _appSession.CurrentUserId;
-            menu.UpdatedOn = DateTime.UtcNow;
-
-            _context.Menus.Add(menu);
-
-            await _context.SaveChangesAsync();
-
-            model.MenuId = menu.MenuId;
-            return new JsonResult(new { Message = "Successfully created a new Menu item.", Modal = model });
+            model.AddError("The request to create an Employer didn't work as expected.");
+            return new JsonResult(model);
         }
-
-
 
         [Authorize]
         [HttpPut("Update")]
         public ActionResult Update(Menu model)
         {
+
             try
             {
 
-                var menu = _context.Menus.FirstOrDefault(m => m.MenuId == model.MenuId);
+                var menu = _context.Menus.FirstOrDefault(m => m.MenuId == model.MenuId && m.Active == true);
 
                 if (menu == null)
                 {
-                    return new JsonResult("The specified RecruitmentEffort does not exist.");
+                    model.AddError("Active menu item not found.");
+                    return new JsonResult(model);
+                }
+
+                var existingMenuItem = _context.Menus.FirstOrDefault(m => m.Name == model.Name && m.MenuId != model.MenuId && m.Active == true);
+
+                if (existingMenuItem != null)
+                {
+                    model.AddFieldError("An active menu with the provided name already exists. Please choose a different name.", "Name", ModelBase.MessageType.Error);
+                    return new JsonResult(model);
                 }
 
                 menu.Name = model.Name;
@@ -155,47 +199,63 @@ namespace tiatania.API.Controllers
                 var total = _context.SaveChanges();
 
                 if (total > 0)
-                    return new JsonResult(new { Message = "Successfully updated the menu item.", Modal = model });
-
+                {
+                    model.AddMessage("Successfully updated the active menu item.");
+                    return new JsonResult(model);
+                }
             }
-
             catch (Exception ex)
             {
-                return new JsonResult(string.Format("[{0},{1}]", ex.Message, ex.InnerException?.Message));
+                model.AddExceptionError(ex);
+                return new JsonResult(model);
             }
 
-            return new JsonResult("This didn't work as expected.");
-
+            model.AddError("The request to update the active menu item didn't work as expected.");
+            return new JsonResult(model);
         }
+
 
         [Authorize]
         [HttpPut("Delete/{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var menu = _context.Menus.FirstOrDefault(menu => menu.MenuId == id && menu.Active);
 
-            if (menu == null)
+            var returnModel = new ModelBase();
+
+            try
             {
-                return NotFound();
+                var menu = _context.Menus.FirstOrDefault(menu => menu.MenuId == id && menu.Active);
+
+                if (menu == null)
+                {
+                    return NotFound();
+                }
+
+                var uploadDirectory = _configuration["UploadDirectory"];
+                var filePath = Path.Combine(uploadDirectory, menu.ImagePath);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                //menu.ImagePath = ""; // Clear the image path
+                menu.Active = false; // Set the active status to false
+                menu.UpdatedBy = _appSession.CurrentUserId;
+                menu.UpdatedOn = DateTime.UtcNow;
+
+                _context.Menus.Update(menu);
+                await _context.SaveChangesAsync();
+
+                returnModel.AddMessage("The menu item has been successfully deleted.");
+                return new JsonResult(returnModel);
+
             }
-
-            var uploadDirectory = _configuration["UploadDirectory"];
-            var filePath = Path.Combine(uploadDirectory, menu.ImagePath);
-
-            if (System.IO.File.Exists(filePath))
+            catch(Exception ex)
             {
-                System.IO.File.Delete(filePath);
+                returnModel.AddExceptionError(ex);
+                return new JsonResult(returnModel);
             }
-
-            menu.ImagePath = ""; // Clear the image path
-            menu.Active = false; // Set the active status to false
-            menu.UpdatedBy = _appSession.CurrentUserId;
-            menu.UpdatedOn = DateTime.UtcNow;
-
-            _context.Menus.Update(menu);
-            await _context.SaveChangesAsync();
-
-            return new JsonResult(new { Message = "Successfully deleted the image and set active status to false.", Modal = menu });
         }
 
     }
