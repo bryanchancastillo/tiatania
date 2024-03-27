@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { createPortal } from 'react-dom';
-import ConfirmModal from './ConfirmModal'; // Asegúrate de que la ruta sea correcta
+import ConfirmModal from './ConfirmModal';
 import { MenuModalProps } from "../interfaces/MenuModalProps"
 import { ReferenceMenuTypes } from "../interfaces/ReferenceMenuTypes"
 import { renderNotificationsFromBackEnd } from '../misc/utils';
-import { Store } from 'react-notifications-component'; // Importa Store desde react-notifications-component
+import { Store } from 'react-notifications-component';
 
 function MenuModal({ isOpen, toggle, selectedMenuItemData, addNewItemToMenu, addUpdatedMenuItem, addDeletedMenuItem }: MenuModalProps) {
 

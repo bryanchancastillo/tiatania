@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import { useEffect, useState } from "react";
 import MenuModal from "../components/MenuModal.js";
 import UserContext from '../components/userContext'
+import { Store } from 'react-notifications-component';
 
 interface MenuItem {
     menuId: number;
@@ -24,6 +25,25 @@ function Menu() {
     const [activeTab, setActiveTab] = useState<string>('cervezas');
 
     const selectedMenuTypeId = selectedDrink[selectedDrink.length - 1];
+
+    function handleClickShowNotification() {
+        Store.addNotification({
+            title: 'Notificacion',
+            message: (
+                <div>
+                    <p><i className="bi bi-telephone"></i> {'\u00A1'}Marca al 0 para comunicarte a la cajera!</p>
+                </div>
+            ),
+            type: 'info',
+            insert: 'top',
+            container: 'bottom-full',
+            dismiss: {
+                duration: 3000,
+                onScreen: true
+            }
+        });
+    }
+
 
     function openMenuModal() {
         setMenuModalIsOpen(true);
@@ -370,7 +390,7 @@ function Menu() {
             </section>
 
             {showTotalPrice && (
-                <div className="totalprice d-flex justify-content-center fixed-bottom bg-primary p-3">
+                <div className="totalprice d-flex justify-content-center fixed-bottom bg-primary p-3" onClick={handleClickShowNotification }>
                     <div>{`TOTAL RD$${totalPrice.toFixed(2)}`}</div>
                 </div>
             )}
